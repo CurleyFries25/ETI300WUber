@@ -1,21 +1,24 @@
-const { Client } = require('pg');
+// db.js
+const { Pool } = require('pg');
 
-const client = new Client({
+const pool = new Pool({
   host: 'uber-db.cig4fleslhmq.us-east-1.rds.amazonaws.com',
   port: 5432,
-  user: 'postgres', // double-check this username
-  password: 'Gription15', // make sure it's correct
-  database: 'postgres', // make sure this is the correct database name
-
- ssl: {
-    rejectUnauthorized: false
+  user: 'postgres',
+  password: 'Gription15',
+  database: 'postgres',
+  ssl: {
+    rejectUnauthorized: false  // Required for Amazon RDS
   }
-
-
 });
 
-client.connect()
-  .then(() => console.log("✅ Connected to the database"))
-  .catch(err => console.error("❌ Connection error", err.stack));
+pool.connect()
+  .then(() => console.log('✅ Successfully connected to the PostgreSQL database!'))
+  .catch(err => {
+    console.error('❌ Failed to connect to the database:');
+    console.error('Code:', err.code);
+    console.error('Message:', err.message);
+    process.exit(1);
+  });
 
-module.exports = client;
+module.exports = pool;
