@@ -1,72 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driver Information</title>
-    <script>
-        // Function to fetch driver data from the API and display it in the table
-        async function fetchDriverData() {
-            try {
-                const response = await fetch('http://44.217.186.87:3000/api/drivers');
-                const data = await response.json();
+  <meta charset="UTF-8">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO3Ws7ZiYAzcjLfAlO6kUFaLt339ynH1E&libraries=places"></script>
 
-                if (data.length === 0) {
-                    document.getElementById("drivers-list").innerHTML = "<tr><td colspan='8'>No data available</td></tr>";
-                    return;
-                }
-
-                // Create table rows for each driver
-                let rows = '';
-                data.forEach(driver => {
-                    rows += `
-                        <tr>
-                            <td>${driver.id}</td>
-                            <td>${driver.name}</td>
-                            <td>${driver.email}</td>
-                            <td>${driver.phone_number}</td>
-                            <td>${driver.license_number}</td>
-                            <td>${driver.vehicle_type}</td>
-                            <td>${driver.rating}</td>
-                            <td>${driver.is_available ? 'Available' : 'Not Available'}</td>
-                        </tr>
-                    `;
-                });
-
-                // Insert rows into the table
-                document.getElementById("drivers-list").innerHTML = rows;
-            } catch (error) {
-                console.error("Error fetching driver data:", error);
-                document.getElementById("drivers-list").innerHTML = "<tr><td colspan='8'>Error fetching data</td></tr>";
-            }
-        }
-
-        // Call the fetchDriverData function when the page loads
-        window.onload = fetchDriverData;
-    </script>
+  <title>Request an Uber</title>
 </head>
-
 <body>
-    <h1>Driver Information</h1>
-    
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>License Number</th>
-                <th>Vehicle Type</th>
-                <th>Rating</th>
-                <th>Availability</th>
-            </tr>
-        </thead>
-        <tbody id="drivers-list">
-            <!-- Data will be inserted here by JavaScript -->
-        </tbody>
-    </table>
-</body>
+  <h1>Request a Ride</h1>
 
+  <form action="/request-ride" method="POST">
+    <!-- Pickup Address -->
+   <label for="pickup">Pickup Location:</label><br>
+  <input type="text" id="pickup" name="pickup" required><br><br>
+
+  <!-- Drop-Off Location -->
+  <label for="dropoff">Drop-Off Location:</label><br>
+  <input type="text" id="dropoff" name="dropoff" required><br><br>
+
+    <!-- Vehicle Class -->
+    <label for="vehicle">Choose a Vehicle Type:</label><br>
+    <select id="vehicle" name="vehicle" required>
+      <option value="UberX">UberX</option>
+      <option value="UberXL">UberXL</option>
+      <option value="Comfort">Comfort</option>
+      <option value="Green">Green</option>
+      <option value="Pet">Pet</option>
+      <option value="Share">Share</option>
+      <option value="Assist">Assist</option>
+      <option value="Black">Black</option>
+    </select><br><br>
+
+    <!-- Submit -->
+    <button type="submit">Find Available Drivers</button>
+  </form>
+
+<script>
+  function initAutocomplete() {
+    const pickupInput = document.getElementById('pickup');
+    const dropoffInput = document.getElementById('dropoff');
+
+    new google.maps.places.Autocomplete(pickupInput, {
+      types: ['geocode'],
+      componentRestrictions: { country: "us" }
+    });
+
+    new google.maps.places.Autocomplete(dropoffInput, {
+      types: ['geocode'],
+      componentRestrictions: { country: "us" }
+    });
+  }
+
+  // Run it when page loads
+  window.onload = initAutocomplete;
+</script>
+
+
+</body>
 </html>
+
