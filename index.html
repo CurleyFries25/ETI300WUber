@@ -2,24 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO3Ws7ZiYAzcjLfAlO6kUFaLt339ynH1E&libraries=places"></script>
-
   <title>Request an Uber</title>
+
+  <!-- Google Maps Places API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO3Ws7ZiYAzcjLfAlO6kUFaLt339ynH1E&libraries=places"></script>
+
+  <!-- Simple Styling -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #000;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+      margin-top: 15px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Request a Ride</h1>
+  <h1>🚗 Request a Ride</h1>
 
   <form action="/request-ride" method="POST">
-    <!-- Pickup Address -->
-   <label for="pickup">Pickup Location:</label><br>
-  <input type="text" id="pickup" name="pickup" required><br><br>
+    <!-- Pickup -->
+    <label for="pickup">Pickup Location:</label>
+    <input type="text" id="pickup" name="pickup" placeholder="Enter pickup address" required>
 
-  <!-- Drop-Off Location -->
-  <label for="dropoff">Drop-Off Location:</label><br>
-  <input type="text" id="dropoff" name="dropoff" required><br><br>
+    <!-- Dropoff -->
+    <label for="dropoff">Drop-Off Location:</label>
+    <input type="text" id="dropoff" name="dropoff" placeholder="Enter destination address" required>
 
     <!-- Vehicle Class -->
-    <label for="vehicle">Choose a Vehicle Type:</label><br>
+    <label for="vehicle">Choose a Vehicle Type:</label>
     <select id="vehicle" name="vehicle" required>
       <option value="UberX">UberX</option>
       <option value="UberXL">UberXL</option>
@@ -29,33 +86,28 @@
       <option value="Share">Share</option>
       <option value="Assist">Assist</option>
       <option value="Black">Black</option>
-    </select><br><br>
+    </select>
 
-    <!-- Submit -->
     <button type="submit">Find Available Drivers</button>
   </form>
 
-<script>
-  function initAutocomplete() {
-    const pickupInput = document.getElementById('pickup');
-    const dropoffInput = document.getElementById('dropoff');
+  <script>
+    function initAutocomplete() {
+      const pickupInput = document.getElementById('pickup');
+      const dropoffInput = document.getElementById('dropoff');
 
-    new google.maps.places.Autocomplete(pickupInput, {
-      types: ['geocode'],
-      componentRestrictions: { country: "us" }
-    });
+      new google.maps.places.Autocomplete(pickupInput, {
+        types: ['geocode'],
+        componentRestrictions: { country: "us" }
+      });
 
-    new google.maps.places.Autocomplete(dropoffInput, {
-      types: ['geocode'],
-      componentRestrictions: { country: "us" }
-    });
-  }
+      new google.maps.places.Autocomplete(dropoffInput, {
+        types: ['geocode'],
+        componentRestrictions: { country: "us" }
+      });
+    }
 
-  // Run it when page loads
-  window.onload = initAutocomplete;
-</script>
-
-
+    window.onload = initAutocomplete;
+  </script>
 </body>
 </html>
-
