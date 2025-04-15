@@ -46,30 +46,106 @@ app.post('/request-ride', async (req, res) => {
     const drivers = result.rows;
 
     // 🖼️ 3. Build and send HTML response
-    let html = `<h1>Available ${vehicle} Drivers</h1>`;
-    html += `<p><strong>Pickup Location:</strong> ${pickup}</p>`;
-    html += `<p><strong>Destination:</strong> ${dropoff}</p>`;
- html += `<p><strong>Estimated Distance:</strong> ${distance} | <strong>ETA:</strong> ${duration}</p>`;
-
-    html += `<table border="1" cellpadding="6"><tr><th>Name</th><th>Vehicle</th><th>Class</th><th>Rating</th></tr>`;
-
-    if (drivers.length === 0) {
-      html += `<tr><td colspan="4">No drivers available for ${vehicle}</td></tr>`;
-    } else {
-      drivers.forEach(driver => {
-        html += `
-          <tr>
-            <td>${driver.name}</td>
-            <td>${driver.vehicle_type}</td>
-            <td>${driver.vehicle_class}</td>
-            <td>${driver.rating}</td>
-          </tr>
-        `;
-      });
+let html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Available ${vehicle} Drivers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      padding: 2rem;
     }
 
-    html += `</table>`;
-    res.send(html);
+    h1 {
+      text-align: center;
+      color: #007bff;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.1rem;
+      margin: 0.5rem 0;
+    }
+
+    table {
+      width: 100%;
+      max-width: 800px;
+      margin: 2rem auto;
+      border-collapse: collapse;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+      background-color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .centered {
+      text-align: center;
+      font-style: italic;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Available ${vehicle} Drivers</h1>
+  <p><strong>Pickup Location:</strong> ${pickup}</p>
+  <p><strong>Destination:</strong> ${dropoff}</p>
+  <p><strong>Estimated Distance:</strong> ${distance} | <strong>ETA:</strong> ${duration}</p>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Vehicle</th>
+      <th>Class</th>
+      <th>Rating</th>
+    </tr>`;
+
+if (drivers.length === 0) {
+  html += `
+    <tr>
+      <td colspan="4" class="centered">No drivers available for ${vehicle}</td>
+    </tr>`;
+} else {
+  drivers.forEach(driver => {
+    html += `
+    <tr>
+      <td>${driver.name}</td>
+      <td>${driver.vehicle_type}</td>
+      <td>${driver.vehicle_class}</td>
+      <td>${driver.rating}</td>
+    </tr>`;
+  });
+}
+
+html += `
+  </table>
+</body>
+</html>
+`;
+
+res.send(html);
 
   } catch (err) {
     console.error('❌ Error processing request:', err.message);
