@@ -56,7 +56,7 @@ let html = `
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f9fa;
-      color: #333;
+      color: #444;
       padding: 2rem;
     }
 
