@@ -38,6 +38,14 @@ app.post('/request-ride', async (req, res) => {
     const distance = mapData?.distance?.text || 'N/A';
     const duration = mapData?.duration?.text || 'N/A';
 
+ // 💵 2. Calculate estimated fare (base + per mile)
+    let fareEstimate = 'N/A';
+    if (distance !== 'N/A') {
+      const miles = parseFloat(distance.replace(' mi', ''));
+      fareEstimate = (2.25 + miles * 1.75).toFixed(2);
+    }
+
+
     // 🛠️ 2. Query DB for available drivers
     const result = await pool.query(
       'SELECT name, vehicle_type, vehicle_class, rating FROM drivers WHERE vehicle_class = $1 AND is_available = true',
@@ -112,7 +120,8 @@ let html = `
   <h1>Available ${vehicle} Drivers</h1>
   <p><strong>Pickup Location:</strong> ${pickup}</p>
   <p><strong>Destination:</strong> ${dropoff}</p>
-  <p><strong>Estimated Distance:</strong> ${distance} | <strong>ETA:</strong> ${duration}</p>
+  <p><strong>Estimated Distance:</strong> ${distance} | <strong>ETA:</strong> ${duration}</p>  
+  <p><strong>Estimated Fare:</strong> $${fareEstimate}</p>;
 
   <table>
     <tr>
